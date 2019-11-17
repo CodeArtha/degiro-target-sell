@@ -1,10 +1,25 @@
 import sys
 import os
+from tinydb import TinyDB, Query
+
+# columns = order id | ticker | qty | price1 | price2 | direction (B, S) |
+#           type (1 = limit, 2 = stoploss, 3 = stoplimit) |
+#           status (open, executed, cancelled) | tradingview
+# DATABASE.insert({'ticker': None,
+#                  'qty': None,
+#                  'price1': None,
+#                  'price2': None,
+#                  'direction': None,
+#                  'type': None,
+#                  'status': None,
+#                  'URL': None})
+DATABASE = TinyDB("orders_db.json")
 
 
 def clear_terminal():
     # Clears the current terminal OS independant
     os.system('cls' if os.name == 'nt' else 'clear')
+    return None
 
 
 def main_menu():
@@ -18,25 +33,45 @@ def main_menu():
     print("\n0. Quit")
     choice = input(" >>  ")
     exec_menu(choice)
-    return
+    return None
 
 
 def add_order():
     clear_terminal()
-    print("Registering a new order.")
-    print("Currently only stop loss orders.\n")
-    ticker = input("Ticker: ")
-    amount = input("Amount: ")
-    direction = input("Buy or Sell: ")
-    price = input("Stop Loss price: ")
+    print("Registering a new order.\n")
 
-    # Todo
-    # Sanitize user input
-    # Add order to database
-    # Print complete order
+    ticker = input("Ticker: ").upper()
+    amount = int(input("Amount: "))
+    direction = input("Order direction (B)uy/(S)ell: ").upper()
+
+    if direction not in ("B", "S"):
+        print("Direction has to be B or S")
+
+    print("Order type: ")
+    print("1. Limit")
+    print("2. Stop Loss")
+    print("3. Stop Limit")
+    type = int(input(" >>  "))
+
+    if type == 3:
+        price1 = float(input("Stop Loss price: "))
+        price2 = float(input("Stop Limit price: "))
+    else:
+        price1 = float(input("Stop Loss price: "))
+        price2 = None
+
+    order = {'ticker': ticker,
+             'qty': amount,
+             'price1': price1,
+             'price2': price2,
+             'type': type,
+             'status': "open",
+             'URL': None}
+    DATABASE.insert(order)
+
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
-    return 1
+    return None
 
 
 def edit_order():
@@ -46,18 +81,18 @@ def edit_order():
     order_id = input("Order ID: ")
     price = input("New price: ")
     # change order price
-    # save new order to database
+    DATABASE.insert({})
     # print new order
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
-    return 1
+    return None
 
 
 def view_orders():
     # read all orders from database where status = open
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
-    return 1
+    return None
 
 
 def cancel_order():
@@ -66,7 +101,7 @@ def cancel_order():
     print("Order cancelled")
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
-    return 1
+    return None
 
 
 def exec_menu(choice):
@@ -80,17 +115,19 @@ def exec_menu(choice):
         except KeyError:
             print("Invalid selection, please try again.\n")
             menu_actions['main_menu']()
-    return
+    return None
 
 
 # Back to main menu
 def back():
     menu_actions['main_menu']()
+    return None
 
 
 # Exit program
 def exxit():
     sys.exit()
+    return None
 
 
 # =======================

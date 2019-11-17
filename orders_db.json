@@ -1,0 +1,22 @@
+{
+  "_default": {
+    "1": {
+      "ticker": "AAPL",
+      "qty": 34,
+      "price1": 24.0,
+      "price2": null,
+      "type": 2,
+      "status": "open",
+      "URL": null
+    },
+    "2": {
+      "ticker": "TLSA",
+      "qty": 34,
+      "price1": 56.0,
+      "price2": 45.0,
+      "type": 3,
+      "status": "open",
+      "URL": null
+    }
+  }
+}
