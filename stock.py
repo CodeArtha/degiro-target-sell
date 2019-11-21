@@ -115,10 +115,9 @@ def edit_order():
     return None
 
 
-def view_orders():
-    # read all orders from database where status = open
+def view_orders(st="open"):
     order = Query()
-    for result in DATABASE.search(order.status == "open"):
+    for result in DATABASE.search(order.status == st):
         print(result.doc_id, " ", result)
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
@@ -126,8 +125,12 @@ def view_orders():
 
 
 def cancel_order():
-    input("Order ID: ")
-    # mark order status as cancelled
+    print("Retrieving all open orders...")
+    view_orders("open")
+
+    order_id = int(input("\nOrder ID to cancel: "))
+    DATABASE.update({"status": "cancelled"}, doc_ids=[order_id])
+
     print("Order cancelled")
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
