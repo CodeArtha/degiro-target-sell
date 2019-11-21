@@ -1,6 +1,7 @@
 import sys
 import os
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
+from tinydb import Query
 
 # columns = order id | ticker | qty | price1 | price2 | direction (B, S) |
 #           type (1 = limit, 2 = stoploss, 3 = stoplimit) |
@@ -53,17 +54,17 @@ def add_order():
         print("1. Limit")
         print("2. Stop Loss")
         print("3. Stop Limit")
-        type = int(input(" >>  "))
+        order_type = int(input(" >>  "))
 
-        if type == 3:
+        if order_type == 3:
             price1 = float(input("Stop Loss price: "))
             price2 = float(input("Stop Limit price: "))
             ok_order_type = True
-        elif type == 2:
+        elif order_type == 2:
             price1 = float(input("Stop Loss price: "))
             price2 = None
             ok_order_type = True
-        elif type == 1:
+        elif order_type == 1:
             price1 = float(input("Limit price: "))
             price2 = None
             ok_order_type = True
@@ -74,7 +75,7 @@ def add_order():
              'qty': amount,
              'price1': price1,
              'price2': price2,
-             'type': type,
+             'type': order_type,
              'status': "open",
              'URL': None}
     DATABASE.insert(order)
@@ -86,12 +87,28 @@ def add_order():
 
 def edit_order():
     clear_terminal()
-    ticker = input("Ticker of the order to edit: ")
-    # print all orders open for that ticker
-    order_id = input("Order ID: ")
-    price = input("New price: ")
+    ticker = input("Ticker of the order to edit: ").upper()
+
+    print("Fetching current orders on {}...".format(ticker))
+    order = Query()
+    for result in DATABASE.search((order.ticker == ticker) & (order.status == "open")):
+        print(result.doc_id, " ", result)
+
+    order_id = int(input("Order ID you want to edit: "))
+
+    order_type = DATABASE.get(doc_id=order_id)["type"]
+    if order_type == 1:
+        price1 = float(input("New LIMIT price: "))
+        price2 = None
+    if order_type == 2:
+        price1 = float(input("New STOP LOSS price: "))
+        price2 = None
+    if order_type == 3:
+        price1 = float(input("New STOP price: "))
+        price2 = float(input("New LIMIT price: "))
+
     # change order price
-    DATABASE.insert({})
+    DATABASE.update({"price1": price1, "price2": price2}, doc_ids=[order_id])
     # print new order
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
