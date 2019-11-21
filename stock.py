@@ -47,18 +47,28 @@ def add_order():
     if direction not in ("B", "S"):
         print("Direction has to be B or S")
 
-    print("Order type: ")
-    print("1. Limit")
-    print("2. Stop Loss")
-    print("3. Stop Limit")
-    type = int(input(" >>  "))
+    ok_order_type = False
+    while not ok_order_type:
+        print("Order type: ")
+        print("1. Limit")
+        print("2. Stop Loss")
+        print("3. Stop Limit")
+        type = int(input(" >>  "))
 
-    if type == 3:
-        price1 = float(input("Stop Loss price: "))
-        price2 = float(input("Stop Limit price: "))
-    else:
-        price1 = float(input("Stop Loss price: "))
-        price2 = None
+        if type == 3:
+            price1 = float(input("Stop Loss price: "))
+            price2 = float(input("Stop Limit price: "))
+            ok_order_type = True
+        elif type == 2:
+            price1 = float(input("Stop Loss price: "))
+            price2 = None
+            ok_order_type = True
+        elif type == 1:
+            price1 = float(input("Limit price: "))
+            price2 = None
+            ok_order_type = True
+        else:
+            print("Unknown order type.\n")
 
     order = {'ticker': ticker,
              'qty': amount,
@@ -127,7 +137,6 @@ def back():
 # Exit program
 def exxit():
     sys.exit()
-    return None
 
 
 # =======================
