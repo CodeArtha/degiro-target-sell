@@ -117,6 +117,9 @@ def edit_order():
 
 def view_orders():
     # read all orders from database where status = open
+    order = Query()
+    for result in DATABASE.search(order.status == "open"):
+        print(result.doc_id, " ", result)
     input("Press ENTER to go back to main menu")
     menu_actions['main_menu']()
     return None
