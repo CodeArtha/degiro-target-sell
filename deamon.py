@@ -10,3 +10,4 @@ DEGIRO_PASSWORD = keyring.get_password("degiro.nl", DEGIRO_USERNAME)
 
 tv = TradingView(TRADINGVIEW_USERNAME, TRADINGVIEW_PASSWORD)
 tv.connect()
+print(tv.get_stock_url("TSLA"))
