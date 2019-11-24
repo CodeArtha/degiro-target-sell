@@ -18,26 +18,27 @@ class Degiro:
         time.sleep(2)
         uname_input = self.browser.find_element_by_id("username")
         passwd_input = self.browser.find_element_by_id("password")
-        login_button = self.browser.find_element_by_name("loginButtonUniversal")
 
         uname_input.clear()
         uname_input.send_keys(self.username)
         passwd_input.clear()
         passwd_input.send_keys(self.password)
-        login_button.Click()
+        passwd_input.submit()
         time.sleep(2)
 
-        if self.browser.find_element_by_class("_16w6oZfTNqqvo0AKLHs8yK").text == "William Arsac":
+        if self.browser.find_elements_by_class_name("_19dFdjzCl1LYGUAL1nstT3")[8].get_attribute("aria-label")\
+                == "Déconnexion":
             self.connected = True
         else:
-            self.browser.Close()
+            self.browser.close()
             raise ConnectionError("Could not connect to degiro's website")
 
     def disconnect(self):
         if self.connected:
-            disconnect_button = self.browser.find_element_by_text("Déconnexion")
+            disconnect_button = self.browser.find_elements_by_class_name("_19dFdjzCl1LYGUAL1nstT3")[8]
             disconnect_button.click()
-            self.browser.Close()
+            self.connected = False
+            self.browser.close()
 
     def add_sell_order(self, qty, price1, price2, ordertype, **kwargs):
         # ordertype (1 = limit, 2 = stoploss, 3 = stoplimit)
