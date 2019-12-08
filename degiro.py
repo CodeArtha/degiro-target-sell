@@ -79,4 +79,10 @@ class Degiro:
 
     def cancel_orders(self, name):
         # finds all orders open on a "named" stock and cancels them
-        pass
+        if self.connected:
+            # Going to the "Orders" page
+            self.browser.get("https://trader.degiro.nl/trader4/#/orders/open")
+
+            # Get all open orders
+            orders_delete_btn = self.browser.find_elements_by_xpath("//button[@data-name='orderDeleteButton']")
+            orders_delete_btn.get_attribute("title")
