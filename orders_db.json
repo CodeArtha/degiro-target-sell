@@ -1,0 +1,1 @@
+{"_default": {"1": {"ticker": "AAPL", "qty": 30, "price1": 260.0, "price2": null, "type": 1, "status": "open", "URL": null}, "2": {"ticker": "AAPL", "qty": 50, "price1": 265.0, "price2": null, "type": 1, "status": "open", "URL": null}, "3": {"ticker": "AAPL", "qty": 20, "price1": 202.0, "price2": 200.0, "type": 3, "status": "open", "URL": null}}}
